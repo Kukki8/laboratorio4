@@ -7,6 +7,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: write
       contents: read
       issues: write
     timeout-minutes: 10
