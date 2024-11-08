@@ -3,17 +3,16 @@ on:
   pull_request:
     branches: 
       - '*'
-      
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     timeout-minutes: 10
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -38,3 +37,5 @@ jobs:
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:
           pipenv run pytest-coverage: pytest-coverage.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
