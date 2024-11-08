@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -29,8 +31,10 @@ jobs:
         uses: rickstaa/action-black@v1.3.3
       - name: Build coverage file
         run: |
-          pipenv run pytest --cache-clear --cov=app tests/ > pytest-coverage.txt
+         pipenv run pytest --cache-clear --cov=app test/ > pytest-coverage.txt
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
       - name: pytest-coverage-commentator
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:
-          pytest-coverage: pytest-coverage.txt
+          pipenv run pytest-coverage: pytest-coverage.txt
