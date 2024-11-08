@@ -1,14 +1,19 @@
 name: build
-on: push
-
+on:
+  pull_request:
+    branches: 
+      - '*'
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+      issues: write
     timeout-minutes: 10
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -24,4 +29,12 @@ jobs:
           pipenv run pytest --cov
       - name: format
         uses: rickstaa/action-black@v1.3.3
-            
+      - name: Build coverage file
+        run: |
+         pipenv run pytest --cache-clear --cov=app tests/ > pytest-coverage.txt
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
+        with:
+          pytest-coverage: pytest-coverage.txt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
