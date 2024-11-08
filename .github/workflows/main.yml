@@ -1,7 +1,9 @@
 name: build
 on:
-  push
-
+  pull_request:
+    branches: 
+      - '*'
+      
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -28,9 +30,7 @@ jobs:
       - name: Build coverage file
         run: |
           pipenv run pytest --cache-clear --cov=app tests/ > pytest-coverage.txt
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
       - name: pytest-coverage-commentator
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:
-          pipenv run pytest-coverage: pytest-coverage.txt
+          pytest-coverage: pytest-coverage.txt
